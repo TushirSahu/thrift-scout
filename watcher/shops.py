@@ -1,6 +1,6 @@
 """Multi-agent search across second-hand shop chains, orchestrated with LangGraph.
 
-    plan ──► search (one browser agent per chain, in parallel) ──► merge ──► rank ──► END
+    plan ──► search (page parser + one judge call per chain, browser agent as fallback) ──► merge ──► rank ──► END
 
 The plan, search and commute steps are passed in, so the graph is testable without AI or network."""
 import asyncio

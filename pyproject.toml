@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "thrift-scout"
-version = "0.4.0"
+version = "0.4.1"
 description = "Chat with a browser agent that finds and compares listings (Mercari, SUUMO, ...)"
 requires-python = ">=3.11"
 license = "MIT"

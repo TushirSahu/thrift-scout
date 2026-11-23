@@ -2,7 +2,7 @@
   "tools": [
     {
       "name": "search_shops",
-      "description": "Search Japanese second-hand shop chains (Hard Off, BOOKOFF, Treasure Factory) for used items.\n\nkeywords: short search words as sold in Japan, e.g. 'WH-1000XM5'. max_price: yen budget.\nchains: any of hardoff, bookoff, trefac (default all). home_station: Japanese station name for\nin-store pick-up; results are then sorted by train time to each branch (when known), else by price.",
+      "description": "Search Japanese second-hand shops (Hard Off, BOOKOFF, Treasure Factory, Surugaya) for used items.\n\nkeywords: short search words as sold in Japan, e.g. 'WH-1000XM5'. max_price: yen budget.\nchains: any of hardoff, bookoff, trefac, surugaya (default all; surugaya is strong for games, media, figures).\nhome_station: Japanese station name for\nin-store pick-up; results are then sorted by train time to each branch (when known), else by price.",
       "inputSchema": {
         "properties": {
           "keywords": {

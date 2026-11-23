@@ -8,7 +8,7 @@
     {
       "name": "thrift-scout",
       "source": "./",
-      "description": "Find used items at Japanese second-hand shop chains, with train times to their branches."
+      "description": "Find used items in Japanese second-hand shops: deal check, train times and trip plans."
     }
   ]
 }

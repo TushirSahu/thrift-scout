@@ -240,7 +240,7 @@ python3 -m venv .venv && source .venv/bin/activate
 pip install -e '.[agent,dev]'
 pytest                       # offline tests
 pytest -m live               # the real shop pages still parse
-python evals/run.py          # search quality on 15 fixed requests (no AI, free)
+python evals/run.py          # search quality on 17 fixed requests (no AI, free)
 claude plugin validate .
 ```
 
@@ -250,7 +250,7 @@ shop couldn't be searched, labels deals correctly in English, and never passes o
 runner refuses folders with a large `.venv`); each run uses your Claude plan:
 
 ```bash
-claude plugin eval . --runs 1 --ablation none   # about $0.55 for the 5 cases
+claude plugin eval . --runs 1 --ablation none   # about $0.65 for the 6 cases
 ```
 
 ## License

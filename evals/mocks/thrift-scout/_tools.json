@@ -146,6 +146,94 @@
         "idempotentHint": true,
         "openWorldHint": true
       }
+    },
+    {
+      "name": "plan_trip",
+      "description": "Plan one train trip to pick up several used items in store: which branch to visit for each item and in what\norder, with train time and fare per leg and totals.\n\nFirst run search_shops with home_station for each item and choose the real matches yourself. Then pass, for each\nitem (at most 3), 1-2 of those listings as options: want (the item, e.g. 'headphones'; same want = alternatives),\ntitle, url, price, branch, and address (the listing's branch_station). Only listings with a branch work\n(Hard Off, Treasure Factory). Branches more than max_minutes from home are left out (suggest shipping).",
+      "inputSchema": {
+        "$defs": {
+          "Option": {
+            "properties": {
+              "want": {
+                "title": "Want",
+                "type": "string"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "url": {
+                "title": "Url",
+                "type": "string"
+              },
+              "price": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Price"
+              },
+              "branch": {
+                "title": "Branch",
+                "type": "string"
+              },
+              "address": {
+                "title": "Address",
+                "type": "string"
+              }
+            },
+            "required": [
+              "want",
+              "title",
+              "url",
+              "branch",
+              "address"
+            ],
+            "title": "Option",
+            "type": "object"
+          }
+        },
+        "properties": {
+          "home_station": {
+            "title": "Home Station",
+            "type": "string"
+          },
+          "options": {
+            "items": {
+              "$ref": "#/$defs/Option"
+            },
+            "title": "Options",
+            "type": "array"
+          },
+          "round_trip": {
+            "default": true,
+            "title": "Round Trip",
+            "type": "boolean"
+          },
+          "max_minutes": {
+            "default": 120,
+            "title": "Max Minutes",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "home_station",
+          "options"
+        ],
+        "title": "plan_tripArguments",
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
     }
   ]
 }

@@ -141,3 +141,36 @@ def test_add_branches_fills_address_cheapest_first_and_skips_failures():
     assert out[3].branch_station == out[4].branch_station == "埼玉県越谷市袋山1852-1"
     assert seen.count("https://www.treasure-f.com/shop/34/") == 1              # one fetch per branch
     assert not any("bookoff" in u for u in seen)
+
+
+# --- 駿河屋 (Surugaya) ---
+SURUGAYA = '''<div class="item"> <div class="photo_box"> <p class="thum"> <a href="https://www.suruga-ya.jp/product/detail/109101569"><img src="https://www.suruga-ya.jp/database/photo.php?shinaban=109101569&size=m"></a> </p> </div>
+<div class="item_detail"> <div class="title"> <a href="https://www.suruga-ya.jp/product/detail/109101569"> <h3 class="product-name">Nintendo Switch本体(有機ELモデル) ホワイト</h3> </a> </div> </div>
+<div class="item_price padT12"> <p class="price_teika"> 中古：<span class="text-red"><strong>￥25,800 </strong></span> ～ <span class="text-red"><strong>￥31,000 </strong></span>&nbsp; <span class="tax">税込</span> </p> </div> </div>
+<div class="item"> <a href="https://www.suruga-ya.jp/product/detail/1"><h3 class="product-name">sold out one</h3></a>
+<div class="item_price padT12"> <p class="price_teika"> 品切れ </p> </div> </div>
+<div class="item"> <a href="https://www.suruga-ya.jp/product/detail/2"><h3 class="product-name">new only</h3></a>
+<div class="item_price padT12"> <p class="price_teika"> 新品：<span class="text-red"><strong>￥63,980 </strong></span> </p> </div> </div>
+<div class="item"> <p class="condition">navigation block without a product link</p> </div>'''
+
+
+def test_surugaya_keeps_used_in_stock_lowest_price():
+    [i] = PARSERS["surugaya"](SURUGAYA)
+    assert i.url == "https://www.suruga-ya.jp/product/detail/109101569"
+    assert i.title == "Nintendo Switch本体(有機ELモデル) ホワイト" and i.price == 25800
+    assert i.image_url.startswith("https://www.suruga-ya.jp/database/photo.php")
+
+
+def test_fetch_retries_once_after_redirect_page():
+    calls = []
+
+    def handler(req):
+        calls.append(req)
+        if len(calls) == 1:  # first visit sets a cookie and answers with a meta-refresh page
+            return httpx.Response(200, text='<meta http-equiv="refresh" content="0;url=x">Redirecting to x',
+                                  headers={"set-cookie": "k_uid=abc; Path=/"})
+        assert req.headers.get("cookie") == "k_uid=abc"
+        return httpx.Response(200, text=SURUGAYA)
+
+    items = asyncio.run(fetch_shop("surugaya", "switch", None, httpx.MockTransport(handler)))
+    assert len(calls) == 2 and [i.price for i in items] == [25800] and items[0].shop == "Surugaya"

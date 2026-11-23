@@ -6,7 +6,7 @@ from watcher.shops import CHAINS
 from watcher.tools import lookup_commute
 
 pytestmark = pytest.mark.live
-QUERY = {"hardoff": "WH-1000XM5", "bookoff": "ワンピース", "trefac": "WH-1000XM5"}  # things these shops always stock
+QUERY = {"hardoff": "WH-1000XM5", "bookoff": "ワンピース", "trefac": "WH-1000XM5", "surugaya": "ニンテンドースイッチ"}  # things these shops always stock
 
 
 @pytest.mark.parametrize("key", sorted(PARSERS))

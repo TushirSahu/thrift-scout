@@ -7,7 +7,7 @@ import logging
 from mcp.server.mcpserver import MCPServer
 from mcp.types import ToolAnnotations
 
-from watcher import market
+from watcher import market, trip
 from watcher.listings import clean_listings
 from watcher.shop_pages import CHAINS, PARSERS, LayoutChanged, Plan, add_branches, fetch_shop, rank
 from watcher.tools import lookup_commute
@@ -55,6 +55,19 @@ async def market_price(keywords: str) -> dict | None:
 async def commute_time(from_station: str, to_station: str) -> str:
     """Fastest train time between two stations in Japan, e.g. commute_time('吹田', '江坂')."""
     return await lookup_commute(from_station, to_station)
+
+
+@server.tool(annotations=ToolAnnotations(readOnlyHint=True, destructiveHint=False, idempotentHint=True, openWorldHint=True))
+async def plan_trip(home_station: str, options: list[trip.Option], round_trip: bool = True,
+                    max_minutes: int = 120) -> dict:
+    """Plan one train trip to pick up several used items in store: which branch to visit for each item and in what
+    order, with train time and fare per leg and totals.
+
+    First run search_shops with home_station for each item and choose the real matches yourself. Then pass, for each
+    item (at most 3), 1-2 of those listings as options: want (the item, e.g. 'headphones'; same want = alternatives),
+    title, url, price, branch, and address (the listing's branch_station). Only listings with a branch work
+    (Hard Off, Treasure Factory). Branches more than max_minutes from home are left out (suggest shipping)."""
+    return await trip.plan_trip(home_station, options, round_trip, max_minutes)
 
 
 def main():

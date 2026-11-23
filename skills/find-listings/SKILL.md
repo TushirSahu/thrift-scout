@@ -1,6 +1,6 @@
 ---
 name: find-listings
-description: Find used items at Japanese second-hand shop chains (Hard Off, BOOKOFF, Treasure Factory), say whether the price is a good deal compared with recent sales, and give train times to the branches. Use when the user wants something used, 中古, from a リサイクルショップ, asks what a used item is worth in Japan, or how far a shop is by train.
+description: Find used items at Japanese second-hand shops (Hard Off, BOOKOFF, Treasure Factory, Surugaya), say whether the price is a good deal compared with recent sales, give train times to the branches, and plan one trip to pick up several items. Use when the user wants something used, 中古, from a リサイクルショップ, asks what a used item is worth in Japan, how far a shop is by train, or wants to pick up several things in one outing.
 ---
 
 # Find used items in Japanese second-hand shops
@@ -10,6 +10,11 @@ Tools (from the `thrift-scout` MCP server):
   `market` (typical used price from recent Yahoo! Auctions sales) and `vs_market_pct` on each item.
 - `market_price(keywords)`: typical used price alone, for "what is X worth?" or "is ¥N fair for X?".
 - `commute_time(from_station, to_station)`: fastest train route, e.g. "24 min, 1 transfer, ¥370".
+- `plan_trip(home_station, options, round_trip?, max_minutes?)`: one train trip through the branches that hold
+  several items: best branch per item, visit order, minutes and fare per leg, totals.
+
+Shops: Hard Off, Treasure Factory (in-store pick-up, branch known), BOOKOFF and Surugaya (online, shipped;
+Surugaya is strong for games, media, figures and hobby goods, and its search mixes in many accessories).
 
 ## How to search
 1. Turn the request into short keywords as the item is sold in Japan (model numbers work best, e.g. `WH-1000XM5`;
@@ -23,6 +28,16 @@ Tools (from the `thrift-scout` MCP server):
    price, title, shop and branch, condition grade if given, deal label, and the link. Mention shops listed in `failed`.
    Leave rejected listings out of the list: at most one short line saying what you skipped and why, without links
    (e.g. "Skipped: one WH-1000XM4, older model, and one junk listing").
+
+## Trip planning
+When the user wants several things in one outing ("headphones and a rice cooker this Saturday, from 吹田"):
+1. Run `search_shops` with `home_station` for each item and pick the real matches yourself (as above).
+2. Call `plan_trip` with, for each item (at most 3), the 1-2 best matches that have a `branch` and `branch_station`:
+   `want` = the item, `title`, `url`, `price`, `branch`, `address` = the listing's `branch_station`.
+3. Present the stops in order: branch, what to buy there with price and link, minutes and fare for that leg; then
+   the way home and the totals. Say which items were `skipped` and why (e.g. better shipped).
+4. Remind the user that stock changes: check the item is still there before going, or order it for in-store
+   pickup (店舗受け取り) where the shop offers it (Hard Off does).
 
 ## Deal check
 `market.median` is what the searched model typically sold for used (`low`-`high` is the middle half of `count` sales

@@ -35,6 +35,8 @@ CHAINS = {
                      'class="productItem__inner"', "該当する商品が見つかりませんでした"),
     "trefac": Chain("Treasure Factory", "https://ec.treasure-f.com/search?word={q}", "*.treasure-f.com",
                     'class="pj-search_item"', "検索結果（0件）"),
+    "surugaya": Chain("Surugaya", "https://www.suruga-ya.jp/search?category=&search_word={q}", "*.suruga-ya.jp",
+                      '<div class="item">', "検索結果は０件です"),
 }
 
 
@@ -94,7 +96,15 @@ def parse_trefac(html: str) -> list[Listing]:
         else None))]
 
 
-PARSERS = {"hardoff": parse_hardoff, "bookoff": parse_bookoff, "trefac": parse_trefac}
+def parse_surugaya(html: str) -> list[Listing]:
+    """Used price only (lowest when several sellers); sold-out (品切れ) and new-only items are skipped."""
+    return [i for b in _blocks("surugaya", html) if "中古：" in b and "品切れ" not in b and (i := _item(
+        "https://www.suruga-ya.jp/", _find(r'href="(https://www\.suruga-ya\.jp/product/detail/[^"]+)"', b),
+        _find(r'class="product-name">(.*?)</h3>', b), _find(r'中古：.*?￥([\d,]+)', b),
+        _find(r'<img[^>]*?\ssrc="([^"]+)"', b)))]
+
+
+PARSERS = {"hardoff": parse_hardoff, "bookoff": parse_bookoff, "trefac": parse_trefac, "surugaya": parse_surugaya}
 
 
 class LayoutChanged(Exception):
@@ -108,6 +118,8 @@ async def fetch_shop(key: str, keywords: str, max_price: int | None = None,
     chain = CHAINS[key]
     async with httpx.AsyncClient(timeout=20, transport=transport, headers={"User-Agent": UA}) as client:
         resp = await client.get(chain.search_url(keywords))
+        if "Redirecting to" in resp.text[:3000]:  # first visit only sets a cookie; the same client sends it back
+            resp = await client.get(chain.search_url(keywords))
     if chain.no_results in resp.text and resp.status_code in (200, 404):
         return []
     resp.raise_for_status()

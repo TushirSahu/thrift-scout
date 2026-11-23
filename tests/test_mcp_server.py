@@ -54,7 +54,7 @@ async def test_search_shops_pickup_adds_train_time(monkeypatch):
 
 async def test_tools_are_registered():
     tools = await srv.server.list_tools()
-    assert {t.name for t in tools} == {"search_shops", "commute_time", "market_price"}
+    assert {t.name for t in tools} == {"search_shops", "commute_time", "market_price", "plan_trip"}
     for t in tools:  # declared for clients: reads public pages only
         a = t.annotations
         assert (a.read_only_hint, a.destructive_hint, a.idempotent_hint, a.open_world_hint) == (True, False, True, True)

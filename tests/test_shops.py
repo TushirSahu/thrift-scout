@@ -10,7 +10,7 @@ def L(url, price, grade=None, station=None, shop=None):
 
 
 def test_chains_have_search_urls_and_site_patterns():
-    assert set(CHAINS) == {"hardoff", "bookoff", "trefac"}
+    assert set(CHAINS) == {"hardoff", "bookoff", "trefac", "surugaya"}
     assert CHAINS["hardoff"].search_url("WH-1000XM5") == "https://netmall.hardoff.co.jp/search/?q=WH-1000XM5&exso=1"
     assert CHAINS["bookoff"].search_url("ソニー ヘッドホン").startswith("https://shopping.bookoff.co.jp/search/keyword/")
     assert all(c.site.startswith("*.") for c in CHAINS.values())

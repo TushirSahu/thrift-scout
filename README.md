@@ -4,7 +4,7 @@
 
 <p align="center">
   <b>Find used gear in Japan's second-hand shops, right inside Claude Code.</b><br>
-  Hard Off · BOOKOFF · Treasure Factory · deal check vs recent sales · train times · English-friendly · no API key
+  Hard Off · BOOKOFF · Treasure Factory · 駿河屋 · deal check vs recent sales · trip planner · English-friendly · no API key
 </p>
 
 <p align="center">
@@ -45,6 +45,8 @@ downloads about 80 MB and takes a few seconds; later starts are instant.
 find a used WH-1000XM5 under ¥25,000, I'll pick it up near 吹田
 I don't read Japanese: is there a used Switch OLED under ¥30,000? Which is the best deal?
 what does a used iPad Air 4 usually sell for in Japan?
+I need a rice cooker and a microwave this Saturday, I live near 吹田. Plan one trip.
+cheapest used Zelda: Tears of the Kingdom at 駿河屋
 PS5 console (not games) under 50,000 yen, shipped
 how long by train from 梅田 to 江坂?
 ```
@@ -60,7 +62,8 @@ A typical answer:
 
 ## Features
 
-- **Three chains at once:** Hard Off (オフモール), BOOKOFF and Treasure Factory (トレファク), in stock and within your budget.
+- **Four shops at once:** Hard Off (オフモール, which also lists Off House and Hobby Off stock), BOOKOFF, Treasure Factory (トレファク) and 駿河屋 (Surugaya: games, media, figures, hobby goods), in stock and within your budget.
+- **Trip planner:** several items, one outing. Picks the best branch for each item and the visit order, with train time and fare per leg and totals. Branches over 2 hours away are flagged "better shipped".
 - **Is it a good deal?** Every search is compared with what the same model actually sold for on Yahoo! Auctions recently (median of used sales, junk and accessories left out), and each match is labelled good deal, fair or above market.
 - **English-friendly:** ask in English and titles are translated, condition words (ジャンク, 動作未確認, 美品, 本体のみ…) and Hard Off's grade letters are explained.
 - **Pick-up or shipping:** give a home station and results are sorted by train time to each branch's address (Yahoo!乗換案内); otherwise by price, then condition grade.
@@ -83,9 +86,10 @@ flowchart LR
 
 | Part | What it does |
 |---|---|
-| `search_shops` tool | In-stock items from the three chains within your budget. With `home_station`, finds each item's branch and sorts by train time. |
+| `search_shops` tool | In-stock items from the four shops within your budget. With `home_station`, finds each item's branch and sorts by train time. |
 | `market_price` tool | Typical used price from recent Yahoo! Auctions sales: median, middle-half range, number of sales. Also added to every `search_shops` result. |
 | `commute_time` tool | Fastest train route between two stations or addresses. |
+| `plan_trip` tool | One train trip through the branches holding several items: best branch per item, visit order, minutes and fare per leg, totals. |
 | `find-listings` skill | Tells Claude how to turn a request into keywords, pick real matches and present them. |
 
 ## Privacy and safety
@@ -102,14 +106,14 @@ flowchart LR
 condition, junk and accessory-only listings left out), cached for a day. 10% or more below it is a good deal, within
 10% is fair. It's a reference: a better condition grade can justify a higher price.
 
-**Why doesn't it list items from Mercari, Yahoo Auctions or 2nd STREET?** Those pages need a real browser (or block automated requests). The
+**Why doesn't it list items from Mercari, Yahoo Auctions, 2nd STREET, じゃんぱら, ソフマップ or GEO?** Those pages need a real browser or block automated requests. The
 [standalone app](#standalone-app) covers Mercari and the other marketplaces with a browser agent.
 
 **Why are some train times missing?** BOOKOFF's online items ship from a warehouse, so they have no branch. For Hard Off
 and Treasure Factory the 10 cheapest items per shop get a branch lookup.
 
 **Is it allowed?** It reads the same public search pages you would, a few requests at a time, for personal use. You are
-responsible for following each site's terms. Not affiliated with Hard Off, BOOKOFF, Treasure Factory, Yahoo! JAPAN or LY Corporation.
+responsible for following each site's terms. Not affiliated with Hard Off, BOOKOFF, Treasure Factory, Surugaya, Yahoo! JAPAN or LY Corporation.
 
 ## Standalone app
 

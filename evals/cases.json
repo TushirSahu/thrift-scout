@@ -13,5 +13,7 @@
   {"id": "harry-potter-bookoff", "keywords": "ハリー・ポッター", "chains": ["bookoff"], "title_has": ["ハリー"]},
   {"id": "kindle", "keywords": "Kindle", "max_price": 15000, "title_has": ["kindle"]},
   {"id": "guitar-pickup-esaka", "keywords": "エレキギター", "max_price": 30000, "home_station": "江坂", "title_has": ["ギター", "guitar"], "min_timed": 0.3},
+  {"id": "switch-oled-surugaya", "keywords": "Nintendo Switch 有機EL 本体", "max_price": 40000, "chains": ["surugaya"], "title_has": ["有機el", "oled"]},
+  {"id": "zelda-totk-surugaya", "keywords": "ゼルダの伝説 ティアーズ オブ ザ キングダム", "max_price": 8000, "chains": ["surugaya"], "title_has": ["ティアーズ"]},
   {"id": "nonsense", "keywords": "zqxjvwk9183", "min_results": 0, "max_results": 0}
 ]
